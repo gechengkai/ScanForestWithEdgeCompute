@@ -4,7 +4,7 @@ import socket
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #创建套接字： ipv4 , TCP连接
 host = ''
 port = 5150
-server.bind(host, port)# 绑定地址与端口
+server.bind((host, port))# 绑定地址与端口
 server.listen(5)# 监听
 print('Listening for a client....')
 clinet, addr = server.accept()# 获取客户端句柄和地址
