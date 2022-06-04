@@ -2,7 +2,7 @@ import socket
 
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #创建套接字： ipv4 , TCP连接
-host = ''
+host = '192.168.31.69'
 port = 5150
 server.bind((host, port))# 绑定地址与端口
 server.listen(5)# 监听
