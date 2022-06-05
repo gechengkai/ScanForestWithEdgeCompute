@@ -6,7 +6,7 @@ import threading
  
 ip_port=("192.168.31.69",19984)
  
-class MyServer(socketserver.BaseRequestHandler):
+class ClientServer(socketserver.BaseRequestHandler):
     def handle(self):
         userClinet = self.request
         userAddr = self.client_address# IP地址
@@ -23,6 +23,6 @@ class MyServer(socketserver.BaseRequestHandler):
                 print(e)
                 break   
 if __name__ == "__main__":
-    s = socketserver.ThreadingTCPServer(ip_port, MyServer)
+    s = socketserver.ThreadingTCPServer(ip_port, ClientServer)
     print("start listen")
     s.serve_forever()
