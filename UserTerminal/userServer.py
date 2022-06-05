@@ -4,7 +4,7 @@ import sys
 import time
 import threading
  
-ip_port=("192.168.31.53",5150)
+ip_port=("192.168.31.53",19984)
  
 class UserServer(socketserver.BaseRequestHandler):
     def handle(self):
@@ -37,8 +37,18 @@ class UserServer(socketserver.BaseRequestHandler):
                     strGuid = str(int.from_bytes(arrGuid, byteorder = 'little')) #for test
                      
                     print("-------------request guid is ", strGuid)
-                    imgData = allData[64:]
-                    strImgFile = "2.jpg"
+
+                    #接收到的数据，接下来64字节是name，后面的是图片数据
+                    arrName = allData[64:128]
+                    #去除末尾的0
+                    tail = arrName.find(b'n')
+                    print('tail :',tail)
+                    arrName = arrName[0:tail]
+                    strName = arrName.decode() #
+                    
+                    print("-------------request Name is ", strName)
+                    imgData = allData[128:]
+                    strImgFile = strName+".jpg"
                     print("img file name is ", strImgFile)
   
                     #将图片数据保存到本地文件
