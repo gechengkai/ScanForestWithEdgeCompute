@@ -1,22 +1,59 @@
-import socket
-
-
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #创建套接字： ipv4 , TCP连接
-host = '192.168.31.69'
-port = 5150
-server.bind((host, port))# 绑定地址与端口
-server.listen(5)# 监听
-print('Listening for a client....')
-clinet, addr = server.accept()# 获取客户端句柄和地址
-print('Accept connection from:', addr)
-clinet.send(str.encode('Welcom to my server!'))# 向客户端发送消息
-while True:
-    data = clinet.recv(1024)# 指定存储接收数据的缓冲区的大小
-    if (bytes.decode(data) == 'exit'):
-        break
-    else:
-        print('Received data from client:',bytes.decode(data))
-        clinet.send(data)
-print('Ending the connection')
-clinet.send(str.encode('exit'))
-clinet.close()
+import socketserver
+import os
+import sys
+import time
+import threading
+ 
+ip_port=("192.168.31.69",19984)
+ 
+class MyServer(socketserver.BaseRequestHandler):
+    def handle(self):
+        print("conn is :",self.request) # conn
+        print("addr is :",self.client_address) # addr
+        
+        while True:
+            try:
+                self.str = self.request.recv(8)
+                data = bytearray(self.str)
+                headIndex = data.find(b'\xff\xaa\xff\xaa')
+                print(headIndex)
+                
+                if headIndex == 0:
+                    allLen = int.from_bytes(data[headIndex+4:headIndex+8], byteorder='little')
+                    print("len is ", allLen)
+ 
+                    curSize = 0
+                    allData = b''
+                    while curSize < allLen:
+                        data = self.request.recv(1024)
+                        allData += data
+                        curSize += len(data)
+ 
+                    print("recv data len is ", len(allData))
+                    #接收到的数据，前64字节是guid，后面的是图片数据
+                    arrGuid = allData[0:64]
+                    #去除guid末尾的0
+                    tail = arrGuid.find(b'\x00')
+                    arrGuid = arrGuid[0:tail]
+                    strGuid = str(int.from_bytes(arrGuid, byteorder = 'little')) #for test
+                    
+                    print("-------------request guid is ", strGuid)
+                    imgData = allData[64:]
+                    strImgFile = "2.jpg"
+                    print("img file name is ", strImgFile)
+ 
+                    #将图片数据保存到本地文件
+                    with open(strImgFile, 'wb') as f:
+                        f.write(imgData)
+                        f.close()
+                        
+                    break
+            except Exception as e:
+                print(e)
+                break
+ 
+ 
+if __name__ == "__main__":
+    s = socketserver.ThreadingTCPServer(ip_port, MyServer)
+    print("start listen")
+    s.serve_forever()
