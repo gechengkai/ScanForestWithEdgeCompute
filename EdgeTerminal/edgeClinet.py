@@ -6,7 +6,7 @@ import glob, os
 
 from numpy import dtype
  
-HOST,PORT = "192.168.31.53",19984
+HOST,PORT = "192.168.31.53",5150
  
 def main():
     

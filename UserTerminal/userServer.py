@@ -4,7 +4,7 @@ import sys
 import time
 import threading
  
-ip_port=("192.168.31.53",19984)
+ip_port=("192.168.31.53",5150)
  
 class UserServer(socketserver.BaseRequestHandler):
     def handle(self):
