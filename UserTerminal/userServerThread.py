@@ -23,6 +23,7 @@ import cv2
 import torch
 import torch.backends.cudnn as cudnn
 
+PASS_SAVE_PATH = 'UserTerminal/passback/'
 class userServerThread(QThread):
     def __init__(self, edgeClient, addr):
         print('有新连接建立！')
@@ -61,7 +62,7 @@ class userServerThread(QThread):
                     #接收到的数据，接下来64字节是name，后面的是图片数据
                     arrName = allData[64:128]
                     #去除末尾的0
-                    tail = arrName.find(b'n')
+                    tail = arrName.find(b'@')
                     print('tail :',tail)
                     arrName = arrName[0:tail]
                     strName = arrName.decode() #
@@ -72,7 +73,7 @@ class userServerThread(QThread):
                     print("img file name is ", strImgFile)
   
                     #将图片数据保存到本地文件
-                    with open(strImgFile, 'wb') as f:
+                    with open(PASS_SAVE_PATH + strImgFile, 'wb') as f:
                         f.write(imgData)
                         f.close()
                          
@@ -82,3 +83,5 @@ class userServerThread(QThread):
                 break
 
         self.edgeClient.close()
+
+    

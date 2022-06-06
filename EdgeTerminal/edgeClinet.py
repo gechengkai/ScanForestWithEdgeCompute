@@ -6,9 +6,10 @@ import glob, os
 
 from numpy import dtype
  
-HOST,PORT = "192.168.31.53",5150
  
 def main():
+    
+    HOST,PORT = "192.168.31.53",5150
     
     RES_SAVE_PATH = '/media/apple/bf53bc5b-27d7-4f8f-9413-2e8fd541cdee/apple/share/gck/ScanForestProgram/ScanMountProgram-PyQt/detectDir/taian/capImg/'
 

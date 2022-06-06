@@ -5,3 +5,8 @@
 3050#80#120.jpg
 UserTerminal/__pycache__
 EdgeTerminal/__pycache__
+EdgeTerminal/detectDir
+EdgeTerminal/guoyuefu.range
+EdgeTerminal/utils/__pycache__
+EdgeTerminal/models/__pycache__
+EdgeTerminal/best.pt

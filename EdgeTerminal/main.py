@@ -14,9 +14,11 @@ from edgeServerThread import edgeServerThread
 
 
 class MainWiget(QWidget):
+      
     def __init__(self):
         super().__init__()
 
+        # 创建服务器
         userServer = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         ip_port=("192.168.31.69",19984)
         userServer.bind(ip_port)
@@ -27,14 +29,13 @@ class MainWiget(QWidget):
             userClient, addr = userServer.accept()
             print(userClient, addr)
             userClient = edgeServerThread(userClient, addr) # 创建线程
-            userClient.startScanSig.connect(self.scan) # 接收信号，执行扫描
+            userClient.startScanSig.connect(self.startScan) # 接收信号，执行扫描
             userClient.run() #执行线程
+    
 
-    def scan(self):
-        print("开始扫描乐乐乐乐乐乐乐乐乐乐乐乐！")
-
+    
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     mainWidget = MainWiget()
-    sys.exit(app.exec_())
+    # sys.exit(app.exec_())
