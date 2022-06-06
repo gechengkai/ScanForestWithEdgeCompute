@@ -1,17 +1,38 @@
-import socketserver
-import os
-import sys
-import time
-import threading
- 
- 
-class UserServer(socketserver.BaseRequestHandler):
-    def handle(self):
-        print("conn is :",self.request) # 连接句柄
-        print("addr is :",self.client_address) # IP地址
+#!/usr/bin/env python
+# -*- encoding: utf-8 -*-
+'''
+@Description:    :用户端多线程服务器
+@Date            :2022/06/06 
+@Author          :gechengkai
+@version         :v1.1
+'''
+import os, sys, requests, json, time, base64, os, socket, urllib3.request, glob, argparse, threading, logging
+from requests.api import head
+from PIL import Image
+# from yolo import YOLO
+from sys import platform
+from PyQt5 import QtCore, QtGui, QtNetwork
+from PyQt5.QtCore import QUrl, QByteArray, QThread
+from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkRequest
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QLineEdit, QGridLayout, QDesktopWidget, QHBoxLayout, QProgressBar, QStackedWidget
+from PyQt5.QtCore import pyqtSignal, QObject, Qt, pyqtSlot
+from PyQt5.QtGui import QPalette, QPixmap, QBrush, QFont
+
+from pathlib import Path
+import cv2
+import torch
+import torch.backends.cudnn as cudnn
+
+class userServerThread(QThread):
+    def __init__(self, edgeClient, addr):
+        print('有新连接建立！')
+        super().__init__()
+        self.edgeClient, self.addr = edgeClient, addr
+    def run(self) -> None:
+        # print('有新连接建立！')
         while True:
             try:
-                self.str = self.request.recv(8)
+                self.str = self.edgeClient.recv(8)
                 data = bytearray(self.str)
                 headIndex = data.find(b'\xff\xaa\xff\xaa')
                 print(headIndex)
@@ -23,7 +44,7 @@ class UserServer(socketserver.BaseRequestHandler):
                     curSize = 0
                     allData = b''
                     while curSize < allLen:
-                        data = self.request.recv(1024)
+                        data = self.edgeClient.recv(1024)
                         allData += data
                         curSize += len(data)
   
@@ -59,10 +80,5 @@ class UserServer(socketserver.BaseRequestHandler):
             except Exception as e:
                 print(e)
                 break
- 
- 
-if __name__ == "__main__":
-    ip_port=("192.168.31.53",5150)
-    s = socketserver.ThreadingTCPServer(ip_port, UserServer)
-    print("start listen")
-    s.serve_forever()
+
+        self.edgeClient.close()
