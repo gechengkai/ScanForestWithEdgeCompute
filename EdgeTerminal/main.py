@@ -12,20 +12,29 @@ from PyQt5.QtGui import QFontDatabase, QPalette, QPixmap, QBrush, QFont, QIcon
 from grpc import server
 from edgeServerThread import edgeServerThread
 
-def main():
-    userServer = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    ip_port=("192.168.31.69",19984)
-    userServer.bind(ip_port)
-    userServer.listen(100)
-    print('listening for a client...')
-    while True:
-        # print('ABC for a client...')
-        userClient, addr = userServer.accept()
-        print(userClient, addr)
-        userClient = edgeServerThread(userClient, addr)
-        userClient.run()
+
+class MainWiget(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        userServer = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        ip_port=("192.168.31.69",19984)
+        userServer.bind(ip_port)
+        userServer.listen(100)
+        print('listening for a client...')
+        while True:
+            # print('ABC for a client...')
+            userClient, addr = userServer.accept()
+            print(userClient, addr)
+            userClient = edgeServerThread(userClient, addr) # 创建线程
+            userClient.startScanSig.connect(self.scan) # 接收信号，执行扫描
+            userClient.run() #执行线程
+
+    def scan(self):
+        print("开始扫描乐乐乐乐乐乐乐乐乐乐乐乐！")
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    main()
+    mainWidget = MainWiget()
     sys.exit(app.exec_())

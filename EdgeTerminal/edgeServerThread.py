@@ -24,6 +24,10 @@ import torch
 import torch.backends.cudnn as cudnn
 
 class edgeServerThread(QThread):
+    # *******信号********
+    # 开始扫描
+    startScanSig = QtCore.pyqtSignal()
+
     def __init__(self, userClient, addr):
         print('有新连接建立！')
         super().__init__()
@@ -40,6 +44,7 @@ class edgeServerThread(QThread):
                 elif (bytes.decode(data) =='scan'):
                     print("SCAN ORDER!")
                     self.userClient.send(str.encode('开始扫描！')) #给用户端一个连接状态回复
+                    self.startScanSig.emit() # 发送信号
                     break
                 else:
                     print('Received data form UserTerminal:  ', bytes.decode(data))    
