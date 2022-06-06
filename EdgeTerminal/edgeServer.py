@@ -14,14 +14,23 @@ class ClientServer(socketserver.BaseRequestHandler):
         while True:
             try:
                 data = userClinet.recv(1024)
-                if (bytes.decode(data) =='exit'):
+                if (bytes.decode(data) =='connect'):
+                    print("CONNECT ORDER!")
+                    userClinet.send(str.encode('连接成功！')) #给用户端一个连接状态回复
+                    break
+                elif (bytes.decode(data) =='scan'):
+                    print("SCAN ORDER!")
+                    userClinet.send(str.encode('开始扫描！')) #给用户端一个连接状态回复
                     break
                 else:
                     print('Received data form UserTerminal:  ', bytes.decode(data))    
-                    userClinet.send(str.encode('连接成功！')) #给用户端一个连接状态回复
+                    userClinet.send(str.encode('收到！')) #给用户端一个连接状态回复
+                    break
             except Exception as e:
                 print(e)
                 break   
+        userClinet.close()
+        print("Close connection of :",userClinet)
 if __name__ == "__main__":
     s = socketserver.ThreadingTCPServer(ip_port, ClientServer)
     print("start listen")

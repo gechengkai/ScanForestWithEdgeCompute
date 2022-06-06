@@ -10,7 +10,7 @@ HOST,PORT = "192.168.31.53",5150
  
 def main():
     
-    RES_SAVE_PATH = 'G:/ScanForestProgram-old/saoshan/detectDir/taian/detect/20210820-1554'
+    RES_SAVE_PATH = '/media/apple/bf53bc5b-27d7-4f8f-9413-2e8fd541cdee/apple/share/gck/ScanForestProgram/ScanMountProgram-PyQt/detectDir/taian/capImg/'
 
     picPaths = glob.glob(os.path.join(RES_SAVE_PATH, '*.jpg')) #获取图片路径
     # print(f'img_path list:{picPaths}')
